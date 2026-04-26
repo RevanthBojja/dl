@@ -1,0 +1,71 @@
+import matplotlib.pyplot as plt
+from tensorflow.keras.utils import load_img, img_to_array
+image_path = "/content/jayaramphoto.JPG"  # Replace with your image path
+image = load_img(image_path)  # Load the image
+plt.imshow(image)  # Display the image
+plt.axis("off")  # Hide axes
+plt.show()
+image_array = img_to_array(image)  # Convert to NumPy array
+print(image_array.shape)  # Prints the shape (height, width, channels)
+print(image_array[0])
+image_shape = image_array.shape
+print(image_shape)
+import tensorflow as tf
+import numpy as np
+from tensorflow import keras
+from keras import Sequential
+from keras.layers import Dense, Conv2D, MaxPooling2D, Flatten
+image_resized = load_img(image_path, target_size=(224, 224))
+image_array = img_to_array(image_resized)
+image_shape = image_array.shape
+print(image_shape)
+plt.imshow(image)  # Display the image
+plt.axis("off")  # Hide axes
+plt.show()
+model = Sequential([
+    Conv2D(filters=1, kernel_size=(3,3), strides=(1,1), activation=None, input_shape=image_shape)
+])
+
+# Apply the convolution filter
+filtered_image = model.predict(image_array.reshape(1, 224, 224, 3))
+
+plt.imshow(filtered_image[0])  # Display the image
+plt.axis("off")  # Hide axes
+plt.show()
+# Get weights of the first convolutional layer
+conv_layer = model.layers[0]  # First Conv2D layer
+weights, biases = conv_layer.get_weights()
+
+# Print the kernel weights
+print("Kernel Weights Shape:", weights.shape)  # Shape: (height, width, no of channels, no. of filters)
+print(weights)  # Print raw weight values
+print(image_shape)
+gray_image = load_img(image_path, color_mode="grayscale")
+plt.imshow(gray_image, cmap="gray")
+image_array = img_to_array(gray_image)  # Convert to NumPy array
+print(image_array.shape)  # Prints the shape (height, width, channels)
+gray_image = load_img(image_path, color_mode="grayscale",target_size=(224, 224))
+image_array = img_to_array(gray_image)  # Convert to NumPy array
+image_shape = image_array.shape
+print(image_shape)
+# Define a custom 3x3 kernel
+kernel = np.array([[[-1, 1, 1],
+                    [-1, 1, 1],
+                    [-1, 1, 1]]], dtype=np.float32)
+# Reshape to match Conv2D weight format (height, width, input_channels, output_channels)
+kernel = kernel.reshape((3, 3, 1, 1))
+
+model = Sequential([
+    Conv2D(filters=1, kernel_size=(3,3), strides=(1,1), activation=None, input_shape=image_shape)
+])
+
+# Set the weights of the convolutional layer to your custom kernel
+bias=np.zeros(1)
+model.layers[0].set_weights([kernel, bias])
+
+# Apply the convolution filter
+filtered_image = model.predict(image_array.reshape(1, 224, 224, 1))
+
+plt.imshow(filtered_image[0])  # Display the image
+plt.axis("off")  # Hide axes
+plt.show()
