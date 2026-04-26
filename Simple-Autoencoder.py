@@ -43,7 +43,25 @@ autoencoder.fit(x_train, x_train,
 # Encode and decode some digits
 encoded_imgs = autoencoder.predict(x_test)
 
+import matplotlib.pyplot as plt
 
+n = 10
+plt.figure(figsize=(20, 4))
+
+for i in range(n):
+    # Original
+    ax = plt.subplot(2, n, i + 1)
+    plt.imshow(x_test[i].reshape(28, 28), cmap='gray')
+    plt.title("Original")
+    plt.axis('off')
+
+    # Reconstructed
+    ax = plt.subplot(2, n, i + 1 + n)
+    plt.imshow(encoded_imgs[i].reshape(28, 28), cmap='gray')
+    plt.title("Reconstructed")
+    plt.axis('off')
+
+plt.show()
 # ---------------- MAIN IDEA: Autoencoder ----------------
 
 # An Autoencoder is a neural network used for unsupervised learning.
